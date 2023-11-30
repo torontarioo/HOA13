@@ -1,0 +1,24 @@
+#this is the main.yml playbook for installing NTP
+
+- name: Installing Chrony (Ubuntu)
+  apt:
+    name: chrony
+    state: latest
+
+- replace:
+    dest: /etc/chrony/chrony.conf
+    regexp: server NTP_SERVER iburst
+    replace: server 192.168.56.102 iburst
+    backup: yes
+
+- name: add key to chrony.conf
+  ansible.builtin.lineinfile:
+    dest: /etc/chrony/chrony.conf
+    line: allow 10.0.0.0/24
+    backup: yes
+
+- name: Verifying Installation (Chrony for Ubuntu)
+  service:
+    name: chrony
+    state: restarted
+    enabled: true

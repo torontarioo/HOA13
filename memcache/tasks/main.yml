@@ -1,0 +1,22 @@
+#This is the main.yml file for installing Memory Cached
+
+- name: Installing MemCached (Ubuntu)
+  apt:
+    name:
+      - memcached
+      - python3-memcache
+    state: latest
+
+- name: Editing Config File
+  lineinfile:
+    dest: /etc/memcached.conf
+    regexp: "-1 127.0.0.1"
+    line: "-1 10.0.0.11"
+    state: present
+    backup: yes
+
+- name: Restart Service
+  service:
+    name: memcached
+    state: restarted
+    enabled: true
